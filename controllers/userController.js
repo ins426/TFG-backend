@@ -13,4 +13,9 @@ async function register(req, res) {
     }
 }
 
-module.exports = {register}
+function hola(req,res){
+    console.log(req.headers.cookie.split(';'))
+    res.json({saludo:"hola"})
+}
+
+module.exports = {register, hola}
