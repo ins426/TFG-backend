@@ -4,19 +4,22 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/UserSchema");
 const bcrypt = require("bcrypt");
 
+/**
+ * Validation of auth token cookie
+ * @param req
+ * @param res
+ * @param next
+ */
 function authenticateToken(req, res, next){
+    const authHeader = req.headers['cookie']
+    const token = authHeader && authHeader.split('; ').find((row) => row.startsWith('authToken='))?.split('=')[1];
 
-    /**
-    if(!token) return res.sendStatus(401)
-
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user) =>{
-        if(err)return res.sendStatus(401)
-        req.user = user
+    jwt.verify(token, process.env.AUTH_TOKEN_SECRET,async (err, user) => {
+        if (err) return res.sendStatus(401)
+        let currentUser = await User.findOne({email: user.email}).exec()
+        req.user = currentUser
         next()
-    })**/
+    })
 }
 
 /**
@@ -36,7 +39,7 @@ async function login(req, res) {
         //Authorization
         if (await bcrypt.compare(req.body.password, user.password)) {
             const authToken = jwt.sign({'email': user.email}, process.env.AUTH_TOKEN_SECRET,
-                {expiresIn: '60s'})
+                {expiresIn: '86400s'})
 
             //Setting cookies for JWT tokens, access token and refresh token
             res.cookie("authToken", authToken, {
