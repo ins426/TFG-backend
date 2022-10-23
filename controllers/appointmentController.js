@@ -34,12 +34,28 @@ async function getAppointments(req, res) {
 }
 
 /**
+ * Delete an appointment
+ * @param res
+ * @param req
+ * @returns {Promise<void>}
+ */
+async function deleteAppointment(req, res) {
+    try {
+        await Appointment.deleteOne({_id: new mongoose.Types.ObjectId(req.params.id)}).exec();
+        res.status(200).send()
+    } catch (err) {
+      res.status(422).send(err)
+   }
+}
+
+/**
  * Modify appointment's data
  * @param req
  * @param res
  * @returns {Promise<void>}
  */
 async function editAppointment(req, res) {
+    console.log(req.params.id)
     try {
         await Appointment.updateMany({_id: new mongoose.Types.ObjectId(req.params.id)},
             {
@@ -47,24 +63,15 @@ async function editAppointment(req, res) {
                 id_psychologist: new mongoose.Types.ObjectId(req.body['id_psychologist']),
                 id_patient: new mongoose.Types.ObjectId(req.body['id_patient']),
                 StartTime: req.body['StartTime'],
-                EndTime: req.body['EndTime']
-            })
+                EndTime: req.body['EndTime'],
+                CategoryColor: req.body['CategoryColor']
+            }).exec()
     } catch (err) {
       res.status(422).send(err)
    }
 
    res.status(200).send(req.body)
 
-}
-
-/**
- * Delete an appointment
- * @param res
- * @param req
- * @returns {Promise<void>}
- */
-async function deleteAppointment(res, req) {
-    await Appointment.deleteOne({_id: new mongoose.Types.ObjectId(req.params.id)});
 }
 
 /**
@@ -197,7 +204,8 @@ async function getAvailableEndAppointments(req,res){
 
     let availableEndHour = true
     let can = true
-    for(let time = nextHourChosenStart; time < endTime; time.setMinutes(time.getMinutes()+5) ){
+
+    for(let time = nextHourChosenStart; time <= endTime; time.setMinutes(time.getMinutes()+5) ){
         availableEndHour = true
         for(let i = 0; i < unableAppointments.length; ++i){
             if(!(time <= unableAppointments[i].StartTime ||
@@ -215,6 +223,7 @@ async function getAvailableEndAppointments(req,res){
             break;
         }
     }
+
     return res.status(201).json(availableEndAppointment)
 }
 

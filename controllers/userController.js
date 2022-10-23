@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
     secure: true,
     });
 
-/**
+
  async function register(req, res) {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -23,13 +23,10 @@ const transporter = nodemailer.createTransport({
     } catch {
         res.status(500).send()
     }
-} **/
+}
 
 async function addUser(req, res) {
-    //Checks if user is an administrator
-    if(req.user.rol !== 'administrador'){
-        return res.status(403).send("No tienes suficientes permisos")
-    }
+    //Checks if user is an administrator with cookies
 
     const newUser = new User({...req.body});
     await newUser.save(function (err){
@@ -65,4 +62,4 @@ async function getPsychologists(req, res) {
 }
 
 
-module.exports = {addUser, getPsychologists}
+module.exports = {addUser, getPsychologists, register}
