@@ -27,7 +27,11 @@ const appointmentSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             required: true
         },
-    CategoryColor: String
+    CategoryColor: String,
+    IsBlock: {
+        type: Boolean,
+        default: false
+    }
 })
 
 module.exports = mongoose.model("appointments", appointmentSchema)

@@ -1,4 +1,5 @@
 const Appointment = require("../models/AppointmentSchema")
+const User = require("../models/UserSchema")
 const mongoose = require('mongoose')
 const {compare} = require("bcrypt");
 
@@ -19,7 +20,22 @@ async function getAppointments(req, res) {
         return res.status(201).json(appointments);
     } else {
         //Sends patient's appointments
+        let psychologist = await User.findOne({ id_patients:{ "$in" : [req.user._id]}}).exec()
+
+        let unableAppointments = await Appointment.find({$and:[{id_psychologist:{'$eq':psychologist._id}},
+                {id_patient:{'$ne':req.user._id}}]}).exec()
+
+        const block = {IsBlock:true}
+        for(let i = 0; i < unableAppointments.length; ++i){
+            unableAppointments[i]["IsBlock"] = true
+            unableAppointments[i]["Subject"] = "No disponible"
+            unableAppointments[i]['CategoryColor'] = "#A8A6B3"
+        }
+        //Obtener las citas de ese psicologo y ponerlas en blocked las que no tengan el user id
         let appointments = await Appointment.find({id_patient:req.user._id}).exec()
+        appointments = appointments.concat(unableAppointments)
+
+        return res.status(201).json(appointments);
     }
 
 /**
@@ -55,7 +71,6 @@ async function deleteAppointment(req, res) {
  * @returns {Promise<void>}
  */
 async function editAppointment(req, res) {
-    console.log(req.params.id)
     try {
         await Appointment.updateMany({_id: new mongoose.Types.ObjectId(req.params.id)},
             {
@@ -64,7 +79,8 @@ async function editAppointment(req, res) {
                 id_patient: new mongoose.Types.ObjectId(req.body['id_patient']),
                 StartTime: req.body['StartTime'],
                 EndTime: req.body['EndTime'],
-                CategoryColor: req.body['CategoryColor']
+                CategoryColor: req.body['CategoryColor'],
+                Observations:req.body['Observations']
             }).exec()
     } catch (err) {
       res.status(422).send(err)
@@ -82,12 +98,6 @@ async function editAppointment(req, res) {
 async function addAppointment(req, res) {
     //Checks if user is an administrator or if it is a psychologist who wants to create
     //a new appointment for one of their patients
-    if (req.user.rol !== 'administrador' &&
-        !(req.user.rol === 'psicologo' && req.user._id.equals(new mongoose.Types.ObjectId(req.body.id_patient)
-                && req.user.id_patients.includes(new mongoose.Types.ObjectId(req.body.id_patient))) &&
-        !(req.user.rol === 'paciente' && req.user._id.equals(new mongoose.Types.ObjectId(req.body.id_patient))))) {
-        return res.status(403).send("No tienes suficientes permisos")
-    }
 
     const newAppointment = new Appointment({...req.body})
     await newAppointment.save(function (err){

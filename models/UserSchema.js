@@ -30,7 +30,12 @@ const userSchema = new mongoose.Schema({
     id_patients: [{
         type: mongoose.Schema.Types.ObjectId,
         required: false
-    }]
+    }],
+
+    CategoryColor:{
+        type:String,
+        required:false
+    }
 })
 
 module.exports = mongoose.model("users", userSchema)

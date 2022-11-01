@@ -23,6 +23,22 @@ function authenticateToken(req, res, next){
 }
 
 /**
+ * Validation of auth token cookie
+ * @param req
+ * @param res
+ * @param next
+ */
+function checkToken(req, res, next){
+    const token = req.body['token']
+    console.log(token)
+    jwt.verify(token, process.env.AUTH_TOKEN_SECRET,async (err, user) => {
+        if (err) return res.sendStatus(401)
+        let currentUser = await User.findOne({email: user.email}).exec()
+        res.json({email: currentUser.email}).status(200)
+    })
+}
+
+/**
  * Function in order to login in the platform. Firstly, authentication checks if
  * user crendentials are the right ones and secondly checks the JWT for authorization
  * @param req
@@ -48,7 +64,7 @@ async function login(req, res) {
                 secure: true
             })
 
-            res.json({email: user.email, 'id':user._id, 'name':user.name}).status(200)
+            res.json({email: user.email, 'id':user._id, 'name':user.name, 'rol':user.rol}).status(200)
         } else {
             res.send('Not allowed')
         }
@@ -62,4 +78,4 @@ function logout(req, res) {
     res.sendStatus(204)**/
 }
 
-module.exports = {login, logout, authenticateToken}
+module.exports = {login, logout, authenticateToken, checkToken}

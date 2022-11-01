@@ -1,6 +1,7 @@
 const express = require('express')
-const {login, authenticateToken} = require("../controllers/authController")
-const {addUser,getPsychologists,  register} = require("../controllers/userController")
+const {login, authenticateToken, checkToken} = require("../controllers/authController")
+const {addUser,getPsychologists,  register, getPatitents, setPassword,
+getPatientPsychologist, editPatient, deleteUser, editPsychologist} = require("../controllers/userController")
 const {getAppointments, addAppointment, editAppointment,
 deleteAppointment, getAvailableStartAppointments, getAvailableEndAppointments} = require("../controllers/appointmentController")
 
@@ -8,11 +9,19 @@ const router = express.Router()
 
 router.post("/api/login", login)
 
+//Auth endpoints
+router.post("/api/check-token", checkToken)
+
 //User endpoints
-router.post("/api/user", addUser)
+router.post("/api/user",authenticateToken, addUser)
+router.put("/api/patient",authenticateToken, editPatient)
+router.put("/api/psychologist",authenticateToken, editPsychologist)
+router.delete("/api/user/:id",authenticateToken,deleteUser)
 //router.post("/api/register",register)
 router.get("/api/psychologists", authenticateToken, getPsychologists)
-
+router.get("/api/patients", authenticateToken, getPatitents)
+router.post("/api/patient-psychologist", authenticateToken, getPatientPsychologist)
+router.post("/api/activate-account", setPassword)
 // Appointment endpoints
 router.get("/api/appointment", authenticateToken, getAppointments)
 router.post("/api/available-start-appointment", authenticateToken, getAvailableStartAppointments)
