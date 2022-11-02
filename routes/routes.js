@@ -1,7 +1,8 @@
 const express = require('express')
 const {login, authenticateToken, checkToken} = require("../controllers/authController")
 const {addUser,getPsychologists,  register, getPatitents, setPassword,
-getPatientPsychologist, editPatient, deleteUser, editPsychologist} = require("../controllers/userController")
+getPatientPsychologist, editPatient, deleteUser, editPsychologist, changePassword, forgetPassword
+} = require("../controllers/userController")
 const {getAppointments, addAppointment, editAppointment,
 deleteAppointment, getAvailableStartAppointments, getAvailableEndAppointments} = require("../controllers/appointmentController")
 
@@ -17,6 +18,8 @@ router.post("/api/user",authenticateToken, addUser)
 router.put("/api/patient",authenticateToken, editPatient)
 router.put("/api/psychologist",authenticateToken, editPsychologist)
 router.delete("/api/user/:id",authenticateToken,deleteUser)
+router.put("/api/change-password",authenticateToken,changePassword)
+router.put("/api/forget-password",forgetPassword)
 //router.post("/api/register",register)
 router.get("/api/psychologists", authenticateToken, getPsychologists)
 router.get("/api/patients", authenticateToken, getPatitents)

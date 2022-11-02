@@ -64,7 +64,7 @@ async function login(req, res) {
                 secure: true
             })
 
-            res.json({email: user.email, 'id':user._id, 'name':user.name, 'rol':user.rol}).status(200)
+            res.json({email: user.email, 'id':user._id, 'name':user.name,'surname':user.surname, 'rol':user.rol}).status(200)
         } else {
             res.send('Not allowed')
         }

@@ -30,6 +30,9 @@ async function getAppointments(req, res) {
             unableAppointments[i]["IsBlock"] = true
             unableAppointments[i]["Subject"] = "No disponible"
             unableAppointments[i]['CategoryColor'] = "#A8A6B3"
+            unableAppointments[i]['id_psychologist'] = null
+            unableAppointments[i]['id_patient'] = null
+            console.log(unableAppointments[i])
         }
         //Obtener las citas de ese psicologo y ponerlas en blocked las que no tengan el user id
         let appointments = await Appointment.find({id_patient:req.user._id}).exec()
