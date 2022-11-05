@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/UserSchema");
 const bcrypt = require("bcrypt");
 
+
 /**
  * Validation of auth token cookie
  * @param req
@@ -30,7 +31,6 @@ function authenticateToken(req, res, next){
  */
 function checkToken(req, res, next){
     const token = req.body['token']
-    console.log(token)
     jwt.verify(token, process.env.AUTH_TOKEN_SECRET,async (err, user) => {
         if (err) return res.sendStatus(401)
         let currentUser = await User.findOne({email: user.email}).exec()
@@ -49,7 +49,7 @@ async function login(req, res) {
     //Authentication
     const user = await User.findOne({'email': req.body.email})
 
-    if (!user) return res.status(400).send('Cannot find user')
+    if (!user) return res.status(401).send('Not allowed')
     try {
 
         //Authorization
@@ -66,16 +66,11 @@ async function login(req, res) {
 
             res.json({email: user.email, 'id':user._id, 'name':user.name,'surname':user.surname, 'rol':user.rol}).status(200)
         } else {
-            res.send('Not allowed')
+            res.status(401).send('Not allowed')
         }
     } catch {
         res.status(500).send()
     }
 }
 
-function logout(req, res) {
-    /**refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-    res.sendStatus(204)**/
-}
-
-module.exports = {login, logout, authenticateToken, checkToken}
+module.exports = {login, authenticateToken, checkToken}
