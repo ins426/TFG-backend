@@ -3,8 +3,8 @@ const cors = require("cors")
 const router = require("./routes/routes");
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
-const fs = require('fs')
 const https = require('https')
+const compression = require('compression')
 
 const app = express()
 
@@ -12,13 +12,17 @@ app.use(express.json())
 app.use("/",router)
 app.use(cookieParser())
 app.use(cors())
+app.use(express.static(`${__dirname}/dist`))
+app.use(compression())
 
-mongoose.connect("mongodb://localhost/dd_db")
+mongoose.connect("***REMOVED***")
 
+//mongoose.connect("mongodb:// localhost/dd_db")
 
+/**
 https.createServer({
     cert: fs.readFileSync("localhost.crt"),
     key: fs.readFileSync("localhost.key")
-},app).listen(process.env.PORT)
+},app).listen(27017)**/
 
-//app.listen(process.env.PORT)
+app.listen(8080)

@@ -8,9 +8,8 @@ deleteAppointment, getAvailableStartAppointments, getAvailableEndAppointments} =
 
 const router = express.Router()
 
-router.post("/api/login", login)
-
 //Auth endpoints
+router.post("/api/login", login)
 router.post("/api/check-token", checkToken)
 
 //User endpoints
@@ -19,12 +18,13 @@ router.put("/api/patient",authenticateToken, editPatient)
 router.put("/api/psychologist",authenticateToken, editPsychologist)
 router.delete("/api/user/:id",authenticateToken,deleteUser)
 router.put("/api/change-password",authenticateToken,changePassword)
-router.put("/api/forget-password",forgetPassword)
-//router.post("/api/register",register)
 router.get("/api/psychologists", authenticateToken, getPsychologists)
 router.get("/api/patients", authenticateToken, getPatitents)
-router.post("/api/patient-psychologist", authenticateToken, getPatientPsychologist)
+router.get("/api/patient-psychologist", authenticateToken, getPatientPsychologist)
 router.post("/api/activate-account", setPassword)
+router.put("/api/forget-password",forgetPassword)
+
+
 // Appointment endpoints
 router.get("/api/appointment", authenticateToken, getAppointments)
 router.post("/api/available-start-appointment", authenticateToken, getAvailableStartAppointments)

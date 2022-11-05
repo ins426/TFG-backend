@@ -57,9 +57,8 @@ async function addUser(req, res) {
             }
 
             if(colorCategory){
-                await User.update(
-                {_id: newUser._id},
-                {$set: {ColorCategory:colorCategory}}
+                await User.updateOne({_id: newUser._id},
+                     {$set:{CategoryColor:'#'+colorCategory['hex']}},
                 ).exec()
             }
 
@@ -70,11 +69,6 @@ async function addUser(req, res) {
                 from: process.env.CONTACT_EMAIL,  // sender address
                 to: req.body['email'],   // receiver
                 subject: 'DayDay - Activación de cuenta',
-                attachments: [{
-                    filename: 'DayDay_log_shadow.png',
-                    path: '/home/ins/Universidad/TFG/DayDay/TFG-backend/assets/img/DayDay_log_shadow.png',
-                    cid: 'logo' //my mistake was putting "cid:logo@cid" here!
-                }],
                 html: '<html>\n' +
                     '<head>\n' +
                     '\n' +
@@ -505,11 +499,6 @@ async function forgetPassword(req, res) {
             from: process.env.CONTACT_EMAIL,  // sender address
             to: req.body['email'],   // receiver
             subject: 'DayDay - Restablecer contraseña',
-            attachments: [{
-                filename: 'DayDay_log_shadow.png',
-                path: '/home/ins/Universidad/TFG/DayDay/TFG-backend/assets/img/DayDay_log_shadow.png',
-                cid: 'logo' //my mistake was putting "cid:logo@cid" here!
-            }],
             html: '<html>\n' +
             '<head>\n' +
             '\n' +
