@@ -61,7 +61,7 @@ async function getAppointments(req, res) {
 async function deleteAppointment(req, res) {
     try {
         await Appointment.deleteOne({_id: new mongoose.Types.ObjectId(req.params.id)}).exec();
-        res.status(200).send()
+        res.status(201).send()
     } catch (err) {
       res.status(422).send(err)
    }
@@ -89,7 +89,7 @@ async function editAppointment(req, res) {
       res.status(422).send(err)
    }
 
-   res.status(200).send(req.body)
+   res.status(201).send(req.body)
 
 }
 
@@ -107,7 +107,7 @@ async function addAppointment(req, res) {
         if(err){
             return res.status(422).send(err)
         }
-        return res.status(201).json(req.body);
+        return res.status(201).json(newAppointment);
     })
 }
 

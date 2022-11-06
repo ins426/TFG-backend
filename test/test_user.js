@@ -163,42 +163,42 @@ describe('User test',function (){
                         ColorCategory:"85f79b",
                         idPsychologist: undefined
                     })
-                    .end(function (err, res) {
+                    .end(async function (err, res) {
                         expect(res).to.have.status(201)
                         idPsychologist = res.body['id']
 
-                                        chai.request(baseUrl)
-                    .post('/api/user')
-                    .set({'Cookie': authCookie})
-                    .send({
-                        email: "e.ins26+test5@gmail.com", name: "Test", surname: "Test", rol: "paciente",
-                        idPsychologist: idPsychologist
-                    })
-                    .end(function (err, res) {
-                       expect(res).to.have.status(201)
-                        idPatient = res.body['id']
-
-                        chai.request(baseUrl).post('/api/patient-psychologist')
+                        await chai.request(baseUrl)
+                            .post('/api/user')
                             .set({'Cookie': authCookie})
-                            .send({patientId:idPatient})
-                            .end(function (err,res){
-                                expect(res.body['_id']).to.be.equals(idPsychologist)
+                            .send({
+                                email: "e.ins26+test5@gmail.com", name: "Test", surname: "Test", rol: "paciente",
+                                idPsychologist: idPsychologist
                             })
+                            .end(async function (err, res) {
+                                expect(res).to.have.status(201)
+                                idPatient = res.body['id']
 
-                        //Delete patient
-                            chai.request(baseUrl).delete('/api/user/'+idPatient)
-                        .set({'Cookie': authCookie})
-                        .end(function (err, res) {
-                           expect(res).to.have.status(201)
-                        })
+                                await chai.request(baseUrl).post('/api/patient-psychologist')
+                                    .set({'Cookie': authCookie})
+                                    .send({patientId: idPatient})
+                                    .end(function (err, res) {
+                                        expect(res.body['_id']).to.be.equals(idPsychologist)
+                                    })
 
-                        //Delete psychologist
-                        chai.request(baseUrl).delete('/api/user/'+idPsychologist)
-                        .set({'Cookie': authCookie})
-                        .end(function (err, res) {
-                           expect(res).to.have.status(201)
-                        })
-                    })
+                                //Delete patient
+                                await chai.request(baseUrl).delete('/api/user/' + idPatient)
+                                    .set({'Cookie': authCookie})
+                                    .end(function (err, res) {
+                                        expect(res).to.have.status(201)
+                                    })
+
+                                //Delete psychologist
+                                await chai.request(baseUrl).delete('/api/user/' + idPsychologist)
+                                    .set({'Cookie': authCookie})
+                                    .end(function (err, res) {
+                                        expect(res).to.have.status(201)
+                                    })
+                            })
                     })
             })
 
