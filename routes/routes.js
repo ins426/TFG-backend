@@ -20,7 +20,7 @@ router.delete("/api/user/:id",authenticateToken,deleteUser)
 router.put("/api/change-password",authenticateToken,changePassword)
 router.get("/api/psychologists", authenticateToken, getPsychologists)
 router.get("/api/patients", authenticateToken, getPatitents)
-router.get("/api/patient-psychologist", authenticateToken, getPatientPsychologist)
+router.post("/api/patient-psychologist", authenticateToken, getPatientPsychologist)
 router.post("/api/activate-account", setPassword)
 router.put("/api/forget-password",forgetPassword)
 

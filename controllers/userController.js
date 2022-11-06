@@ -326,7 +326,7 @@ async function addUser(req, res) {
                 if (err)
                     return res.status(422).send(err);
                 else
-                    return res.status(201).json(req.body);
+                    return res.status(201).json({id:newUser._id}).send();
             })
         });
     }else{
@@ -432,7 +432,8 @@ async function editPatient(req,res){
         await Appointment.update({id_patient:idPatient},
             {$set:{Subject:subject}})
 
-        return res.status(201).send()
+         let updatedUser =  await User.findOne({_id: idPatient}).exec()
+         return res.status(201).json({"updatedUser":updatedUser}).send();
      }else{
          res.sendStatus(401)
      }
@@ -758,6 +759,8 @@ async function forgetPassword(req, res) {
         else
             return res.status(201).json(req.body);
     })
+    }else{
+        return res.status(201)
     }
 }
 
