@@ -5,7 +5,7 @@
 ___
 ## Introduction ✏️
 This repository is part of the [Bachelor's Thesis: "DayDay, appointment scheduling for clinics"](https://github.com/ins426/TFG) 
-whose code follows the stack MEAN (MongoDB, Express.js, Angular and Node.js). It contains the server side corresponding to the 'E' and 'N' initials, Express
+which code follows the MEAN stack (MongoDB, Express.js, Angular and Node.js). It contains the server side corresponding to the 'E' and 'N' initials, Express
 and Node.js, which connect to the 'M' initial represented by MongoDB Atlas.
 ___
 ## Tools 🧰
